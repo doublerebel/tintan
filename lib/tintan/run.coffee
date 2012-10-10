@@ -11,11 +11,11 @@ module.exports = (tintan)->
           Tintan.$.android_version(), 'WVGA800'
 
     if Tintan.appXML().targets 'android'
-      desc 'Run the application on Android emulator with debugging'
+      desc 'Run the application on Android emulator' # with debugging'
       task 'android', ->
         Tintan.$.tipy ['android', 'builder.py'], 'simulator',
           Tintan.appXML().name(), Tintan.$.android_home(), process.cwd(), Tintan.appXML().id(),
-          Tintan.$.android_version(), 'WVGA800', '127.0.0.1:5858'
+          Tintan.$.android_version(), 'WVGA800' #, '127.0.0.1:5858'
 
     if Tintan.appXML().targets 'ipad'
       desc 'Run the application on iPad emulator'
