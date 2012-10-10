@@ -1,7 +1,7 @@
 {
   "name": "tintan",
   "description": "Titanium development with style.",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "keywords": [
     "titanium",
     "mobile",
@@ -14,6 +14,9 @@
   "main": "./index.js",
   "bin": {
     "tintan": "./bin/tintan"
+  },
+  "directories": {
+    "lib": "./lib"
   },
   "dependencies": {
     "colors": ">=0.6.0",
