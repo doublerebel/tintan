@@ -96,6 +96,33 @@ class $
     p.stderr.on 'data', (data)-> process.stderr.write data
     p.on 'exit', cb
 
+class Config
+
+  DEFAULT_OPTIONS =
+    debug: false
+    debug_address: '127.0.0.1'
+    debug_port: '5858'
+    iced: false
+    android_device: ''
+    android_devices: []
+
+  file: -> $.E('tintan.config')
+
+  load: ->
+    @options = {}
+    if !fs.existsSync(@file())
+      @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
+      fs.writeFileSync(@file(), JSON.stringify(@options, undefined, 2), 'utf-8')
+    else
+      @options = JSON.parse(fs.readFileSync(@file(), 'utf-8'))
+
+  init: (opts = {})->
+    @load()
+    @options[k] = v for k,v of opts when !@options.hasOwnProperty(k)
+
+  display: ->
+    @load()
+    console.log(k + ': ' + v) for k, v of @options when @options.hasOwnProperty(k)
 
 class AppXML
 
@@ -137,6 +164,7 @@ class Tintan
   @$ = $
   @version: $.pkg.version
   @appXML: $.mem -> new AppXML
+  @config = -> new Config
 
 
 module.exports = Tintan
