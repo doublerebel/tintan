@@ -116,13 +116,30 @@ class Config
     else
       @options = JSON.parse(fs.readFileSync(@file(), 'utf-8'))
 
+  save: ->
+    if @options
+      fs.writeFileSync(@file(), JSON.stringify(@options, undefined, 2), 'utf-8')
+    else
+      console.log('Nothing to save.')
+
   init: (opts = {})->
     @load()
     @options[k] = v for k,v of opts when !@options.hasOwnProperty(k)
+    @save()
 
   display: ->
     @load()
     console.log(k + ': ' + v) for k, v of @options when @options.hasOwnProperty(k)
+
+  set: (opts = {}) ->
+    @load()
+    for k, v of opts
+      if @options.hasOwnProperty(k)
+        @options[k] = v
+        console.log('' + k + ' set to ' + v)
+        @save()
+      else
+        console.log('Unknown option: ' + k)
 
   promptForNext: (i) ->
     if i < 0
@@ -166,6 +183,7 @@ class Config
       i++
 
     @promptForNext(i-1)
+    @save()
 
 class AppXML
 
