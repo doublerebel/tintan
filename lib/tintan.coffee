@@ -124,6 +124,49 @@ class Config
     @load()
     console.log(k + ': ' + v) for k, v of @options when @options.hasOwnProperty(k)
 
+  promptForNext: (i) ->
+    if i < 0
+      return
+    key = @config_opts[i]['k']
+    value = @config_opts[i]['v']
+    process.stdout.write(key + ':' + value + ', new value: ')
+    process.stdin.resume()
+    process.stdin.on('data', (text) =>
+      process.stdin.removeAllListeners('data')
+      ans = text
+      if typeof(@options[key]) is 'boolean'
+        text = text.replace(/(\r\n|\n|\r)/gm,"");
+        lowerText = '' + text.toLowerCase()
+        console.log 'BOOLEAN ' + lowerText
+        if lowerText == "t"
+          console.log 'setting true'
+          ans = true
+
+        switch lowerText
+          when 't', 'true', 'tru', 'tr'
+            ans = true
+            break
+          when 'f', 'false', 'fal', 'fa', 'fals'
+            ans = false
+            break
+
+      @options[key] = ans
+      process.stdin.pause()
+      @promptForNext(--i)
+      @
+    )
+
+  promptForAll: ->
+    @load()
+    @config_opts = []
+    process.stdin.setEncoding('utf8')
+    i = 0
+    for k, v of @options when @options.hasOwnProperty(k)
+      @config_opts.push({k, v})
+      i++
+
+    @promptForNext(i-1)
+
 class AppXML
 
   file: -> $._('tiapp.xml')
