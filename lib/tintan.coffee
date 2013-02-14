@@ -141,6 +141,10 @@ class Config
       else
         console.log('Unknown option: ' + k)
 
+  get: (option) ->
+    @load()
+    return @options[option] if @options.hasOwnProperty(option)
+
   promptForNext: (i) ->
     if i < 0
       return
