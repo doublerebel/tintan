@@ -54,12 +54,12 @@ class Coffee
     Tintan.$.onTaskNamespace options.name + ':watch', ->
       desc "Watch coffee-script files in #{options.src} for changes and compile them into #{options.target}"
       task 'watch', ->
-        c = spawn 'coffee', "--compile --watch --output #{options.target} #{options.src}".split(' ')
+        c = spawn '' + @getCoffeePath(), "--compile --watch --output #{options.target} #{options.src}".split(' ')
         c.stdout.on 'data', (data)-> process.stdout.write data
         c.stderr.on 'data', (data)-> process.stderr.write data
     true
 
-  compile: (source, target, cb)->
+  compile: (source, target, cb)=>
     jake.file.mkdirP path.dirname(target)
     c = fs.readFileSync source, 'utf-8'
     try
@@ -73,6 +73,32 @@ class Coffee
       process.stderr.write err.toString() + "\n"
       fail("Error compiling #{source}\n")
     cb()
+
+  getCoffeePath: ->
+    coffeePath = ''
+    result = ''
+    if Tintan.config().get('iced') is true
+      coffeePath = require.resolve('iced-coffee-script')
+    else
+      coffeePath = require.resolve('coffee-script')
+
+    newCoffeePath = coffeePath.split('/')
+    # ../../../
+    newCoffeePath.pop()
+    newCoffeePath.pop()
+    newCoffeePath.pop()
+    # /bin/coffee
+    newCoffeePath.push('bin')
+    newCoffeePath.push('coffee')
+
+    for dir in newCoffeePath
+      if dir is ''
+        continue
+      else
+        result += '/'
+        result += dir
+
+    return result
 
   invokeTask: ->
     jake.Task[@options.name].invoke()
