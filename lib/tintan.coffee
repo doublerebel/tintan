@@ -99,6 +99,7 @@ class $
 class Config
 
   DEFAULT_OPTIONS =
+    verbose: true
     debug: false
     debug_address: '127.0.0.1'
     debug_port: '5858'
@@ -122,9 +123,9 @@ class Config
     else
       console.log('Nothing to save.')
 
-  init: (opts = {})->
+  init: ->
     @load()
-    @options[k] = v for k,v of opts when !@options.hasOwnProperty(k)
+    @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
     @save()
 
   display: ->
@@ -143,7 +144,15 @@ class Config
 
   get: (option) ->
     @load()
-    return @options[option] if @options.hasOwnProperty(option)
+    result = null
+    if @options.hasOwnProperty(option)
+      if @options[option] is 'true'
+        result = true
+      else if @options[option] is 'false'
+        result = false
+      else
+        result = @options[option]
+    return result
 
   promptForNext: (i) ->
     if i < 0
@@ -158,10 +167,6 @@ class Config
       if typeof(@options[key]) is 'boolean'
         text = text.replace(/(\r\n|\n|\r)/gm,"");
         lowerText = '' + text.toLowerCase()
-        console.log 'BOOLEAN ' + lowerText
-        if lowerText == "t"
-          console.log 'setting true'
-          ans = true
 
         switch lowerText
           when 't', 'true', 'tru', 'tr'
