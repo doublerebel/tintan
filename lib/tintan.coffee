@@ -113,7 +113,7 @@ class Config
     @options = {}
     if !fs.existsSync(@file())
       @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
-      fs.writeFileSync(@file(), JSON.stringify(@options, undefined, 2), 'utf-8')
+      @save()
     else
       @options = JSON.parse(fs.readFileSync(@file(), 'utf-8'))
 
@@ -154,7 +154,7 @@ class Config
         result = @options[option]
     return result
 
-  promptForNext: (i) ->
+  promptForNext: (i) =>
     if i < 0
       return
     key = @config_opts[i]['k']
@@ -163,9 +163,9 @@ class Config
     process.stdin.resume()
     process.stdin.on('data', (text) =>
       process.stdin.removeAllListeners('data')
+      text = text.replace(/(\r\n|\n|\r)/gm,"")
       ans = text
       if typeof(@options[key]) is 'boolean'
-        text = text.replace(/(\r\n|\n|\r)/gm,"");
         lowerText = '' + text.toLowerCase()
 
         switch lowerText
@@ -176,13 +176,17 @@ class Config
             ans = false
             break
 
-      @options[key] = ans
       process.stdin.pause()
-      @promptForNext(--i)
-      @
+      if ans is ''
+        @promptForNext(--i)
+      else
+        @options[key] = ans
+        @save()
+        @promptForNext(--i)
     )
+    @
 
-  promptForAll: ->
+  promptForAll: =>
     @load()
     @config_opts = []
     process.stdin.setEncoding('utf8')
@@ -192,7 +196,6 @@ class Config
       i++
 
     @promptForNext(i-1)
-    @save()
 
 class AppXML
 

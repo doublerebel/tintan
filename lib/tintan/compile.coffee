@@ -51,9 +51,9 @@ class Coffee
       task 'clean', ->
         fs.unlink c for c in compiled
 
-    Tintan.$.onTaskNamespace options.name + ':watch', ->
+    Tintan.$.onTaskNamespace options.name + ':watch', =>
       desc "Watch coffee-script files in #{options.src} for changes and compile them into #{options.target}"
-      task 'watch', ->
+      task 'watch', =>
         c = spawn '' + @getCoffeePath(), "--compile --watch --output #{options.target} #{options.src}".split(' ')
         c.stdout.on 'data', (data)-> process.stdout.write data
         c.stderr.on 'data', (data)-> process.stderr.write data
