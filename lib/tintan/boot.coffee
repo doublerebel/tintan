@@ -75,6 +75,11 @@ class Boot
       desc 'Create a basic Jakefile'
       task 'Jakefile.coffee': _ 'Jakefile.coffee'
 
+      T 'tintan.config'
+      desc 'Create a default config file'
+      task 'tintan.config': _ 'tintan.config'
+      T.deps.push 'tintan.config'
+
       desc 'Install node modules with npm'
       task 'npm', [_('package.json')], npm_install, async: true
       T.deps.push 'npm'

@@ -5,3 +5,7 @@
 *.pyc
 node_modules/
 pkg/
+*.sublime-workspace
+*.sublime-project
+*.sh
+*.config
