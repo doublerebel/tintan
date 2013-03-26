@@ -96,6 +96,106 @@ class $
     p.stderr.on 'data', (data)-> process.stderr.write data
     p.on 'exit', cb
 
+class Config
+
+  DEFAULT_OPTIONS =
+    verbose: true
+    debug: false
+    debug_address: '127.0.0.1'
+    debug_port: '5858'
+    iced: false
+    android_device: ''
+    android_devices: []
+
+  file: -> $.E('tintan.config')
+
+  load: ->
+    @options = {}
+    if !fs.existsSync(@file())
+      @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
+      @save()
+    else
+      @options = JSON.parse(fs.readFileSync(@file(), 'utf-8'))
+
+  save: ->
+    if @options
+      fs.writeFileSync(@file(), JSON.stringify(@options, undefined, 2), 'utf-8')
+    else
+      console.log('Nothing to save.')
+
+  init: ->
+    @load()
+    @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
+    @save()
+
+  display: ->
+    @load()
+    console.log(k + ': ' + v) for k, v of @options when @options.hasOwnProperty(k)
+
+  set: (opts = {}) ->
+    @load()
+    for k, v of opts
+      if @options.hasOwnProperty(k)
+        @options[k] = v
+        console.log('' + k + ' set to ' + v)
+        @save()
+      else
+        console.log('Unknown option: ' + k)
+
+  get: (option) ->
+    @load()
+    result = null
+    if @options.hasOwnProperty(option)
+      if @options[option] is 'true'
+        result = true
+      else if @options[option] is 'false'
+        result = false
+      else
+        result = @options[option]
+    return result
+
+  promptForNext: (i) =>
+    if i < 0
+      return
+    key = @config_opts[i]['k']
+    value = @config_opts[i]['v']
+    process.stdout.write(key + ':' + value + ', new value: ')
+    process.stdin.resume()
+    process.stdin.on('data', (text) =>
+      process.stdin.removeAllListeners('data')
+      text = text.replace(/(\r\n|\n|\r)/gm,"")
+      ans = text
+      if typeof(@options[key]) is 'boolean'
+        lowerText = '' + text.toLowerCase()
+
+        switch lowerText
+          when 't', 'true', 'tru', 'tr'
+            ans = true
+            break
+          when 'f', 'false', 'fal', 'fa', 'fals'
+            ans = false
+            break
+
+      process.stdin.pause()
+      if ans is ''
+        @promptForNext(--i)
+      else
+        @options[key] = ans
+        @save()
+        @promptForNext(--i)
+    )
+    @
+
+  promptForAll: =>
+    @load()
+    @config_opts = []
+    process.stdin.setEncoding('utf8')
+    i = 0
+    for k, v of @options when @options.hasOwnProperty(k)
+      @config_opts.push({k, v})
+      i++
+
+    @promptForNext(i-1)
 
 class AppXML
 
@@ -137,6 +237,7 @@ class Tintan
   @$ = $
   @version: $.pkg.version
   @appXML: $.mem -> new AppXML
+  @config = -> new Config
 
 
 module.exports = Tintan
