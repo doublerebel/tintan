@@ -18,7 +18,7 @@ class $
     rec()
 
   @mem: (fn) -> (args ...)->
-    (arguments.callee['memo'] ||= {})[[].concat args] ||= fn.apply this, args
+    (arguments.callee['memo'] or= {})[[].concat args] or= fn.apply this, args
 
   @pathSearch: (bin, dirs = process.env.PATH.split(':')) ->
     return path.join(d, bin) for d in dirs when fs.existsSync path.join(d, bin)
@@ -50,41 +50,53 @@ class $
   @ios_version: @mem ->
     iphone_dir = path.join(process.env.HOME, 'Library', 'Application Support', 'iPhone Simulator')
     if fs.existsSync iphone_dir
-      return process.env.IOS_VERSION if process.env.IOS_VERSION &&
-        fs.existsSync(path.join(iphone_dir, process.env.IOS_VERSION))
-      fs.readdirSync(iphone_dir).sort()[-1..][0]
+      ver = process.env.IOS_VERSION or Tintan.config().get 'ios_version'
+      if ver and fs.existsSync(path.join(iphone_dir, ver))
+        ver
+      else
+        fs.readdirSync(iphone_dir).sort()[-1..][0]
 
   @android_version: @mem ->
     android_dir = path.join(@android_home(), 'platforms')
     if fs.existsSync android_dir
-      return process.env.ANDROID_VERSION if process.env.ANDROID_VERSION &&
-        fs.existsSync(path.join(android_dir, 'android-' + (process.env.ANDROID_VERSION - 1)))
-      (d.split('-')[1] for d in fs.readdirSync(android_dir)).sort((a,b)-> a - b)[-1..][0]
+      ver = process.env.ANDROID_VERSION or Tintan.config().get 'android_version'
+      if ver and fs.existsSync path.join(android_dir, 'android-' + (ver - 1))
+        ver
+      else
+        (d.split('-')[1] for d in fs.readdirSync(android_dir)).sort((a,b)-> a - b)[-1..][0]
 
   @android_home: @mem ->
-    brew_location = '/usr/local/Cellar/android-sdk'
-    if process.env.ANDROID_SDK && fs.existsSync process.env.ANDROID_SDK
-      process.env.ANDROID_SDK
-    else if fs.existsSync brew_location
-      path.join brew_location, fs.readdirSync(brew_location).sort()[-1..][0]
+    dir = process.env.ANDROID_SDK or Tintan.config().get 'android_sdk'
+    if dir and fs.existsSync dir
+      dir
+    else
+      brew_location = {
+        'osx': '/usr/local/Cellar/android-sdk'
+        'linux': '/opt/android-sdk'
+        'win': 'C:\\Program Files (x86)\\Android\\android-sdk'
+        }[@os]
+      if fs.existsSync brew_location
+        path.join brew_location, fs.readdirSync(brew_location).sort()[-1..][0]
 
-  @platform: process.env.TI_PLATFORM || {osx: 'iphone'}[@os] || 'android'
+  @platform: @mem ->
+    process.env.TI_PLATFORM or Tintan.config().get 'ti_platform' or {osx: 'iphone'}[@os] or 'android'
 
   @sdk: @mem ->
-    if fs.existsSync process.env.TI_SDK
-      process.env.TI_SDK
+    dir = process.env.TI_SDK or Tintan.config().get 'ti_sdk'
+    if dir and fs.existsSync dir
+      dir
     else
       fs.readdirSync(path.join(@home(), 'mobilesdk', @os)).sort()[-1..][0]
 
   @py: @mem ->
     return py for py in [process.env.PYTHON, process.env.TI_PYTHON,
-                         process.env.PYTHON_EXECUTABLE] when fs.existsSync py
+                         process.env.PYTHON_EXECUTABLE, Tintan.config().get 'ti_python'] when fs.existsSync py
     @pathSearch 'python'
 
   @titan: (args ...)->
     @tipy.apply(this, [['titanium.py'], args])
 
-  @fastdev: (args ...)=> @titan.apply this, ['fastdev'].concat(args || [])
+  @fastdev: (args ...)=> @titan.apply this, ['fastdev'].concat(args or [])
 
   @tipy: (ary, args ..., cb)->
     unless cb instanceof Function
@@ -102,10 +114,16 @@ class Config
     verbose: true
     debug: false
     debug_address: '127.0.0.1'
-    debug_port: '5858'
+    debug_port: 5858
     iced: false
+    android_avd: null
     android_device: ''
-    android_devices: []
+    android_sdk: null
+    ios_version: null
+    ti_home: null
+    ti_platform: null
+    ti_python: null
+    ti_sdk: null
 
   file: -> $._('tintan.config')
 

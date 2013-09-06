@@ -7,12 +7,12 @@ module.exports = (tintan)->
       desc 'Run the Android emulator'
       task 'emulator', ->
         # default to config options unless supplied by environment vars
-        android_device = jake.program.envVars['android_device'] if jake.program.envVars.hasOwnProperty('android_device')
-        android_device or= Tintan.config().get('android_device')
+        android_avd = jake.program.envVars['avd'] if jake.program.envVars.hasOwnProperty('avd')
+        android_avd or= Tintan.config().get('android_avd')
 
         Tintan.$.tipy ['android', 'builder.py'], 'emulator',
           Tintan.appXML().name(), Tintan.$.android_home(), process.cwd(), Tintan.appXML().id(),
-          Tintan.$.android_version(), android_device
+          Tintan.$.android_version(), android_avd
 
     if Tintan.appXML().targets 'android'
       desc 'Run the application on Android emulator' # with debugging'
