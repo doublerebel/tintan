@@ -18,8 +18,8 @@ module.exports = (tintan)->
       desc 'Run the application on Android emulator' # with debugging'
       task 'android', ->
         # default to config options unless supplied by environment vars
-        android_device = Tintan.config().get('android_device')
-        android_device = jake.program.envVars['android_device'] if jake.program.envVars.hasOwnProperty('android_device')
+        android_avd = Tintan.config().get('android_avd')
+        android_avd = jake.program.envVars['android_avd'] if jake.program.envVars.hasOwnProperty('android_avd')
         debug = jake.program.envVars['debug'] if jake.program.envVars.hasOwnProperty('debug')
         debug ?= Tintan.config().get('debug')
 
@@ -32,11 +32,11 @@ module.exports = (tintan)->
 
           Tintan.$.tipy ['android', 'builder.py'], 'simulator',
             Tintan.appXML().name(), Tintan.$.android_home(), process.cwd(), Tintan.appXML().id(),
-            Tintan.$.android_version(), Tintan.config().get('android_device'), debug_string
+            Tintan.$.android_version(), Tintan.config().get('android_avd'), debug_string
         else
           Tintan.$.tipy ['android', 'builder.py'], 'simulator',
             Tintan.appXML().name(), Tintan.$.android_home(), process.cwd(), Tintan.appXML().id(),
-            Tintan.$.android_version(), Tintan.config().get('android_device')
+            Tintan.$.android_version(), Tintan.config().get('android_avd')
 
     if Tintan.appXML().targets 'ipad'
       desc 'Run the application on iPad emulator'
