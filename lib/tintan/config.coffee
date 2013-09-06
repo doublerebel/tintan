@@ -19,7 +19,7 @@ module.exports = (tintan) ->
     task 'display', ->
       Tintan.config().display()
 
-    desc 'Set a particular value. Usage: config:set option=value'
+    desc 'Set a particular value. Usage: config:set option=[value|default]'
     task 'set', ->
       Tintan.config().set(jake.program.envVars)
 

@@ -154,6 +154,7 @@ class Config
     @load()
     for k, v of opts
       if @options.hasOwnProperty(k)
+        v = DEFAULT_OPTIONS[k] if v is 'default'
         @options[k] = v
         console.log('' + k + ' set to ' + v)
         @save()
