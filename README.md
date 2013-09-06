@@ -61,101 +61,76 @@
 
 ### CONFIG / ENVIRONMENT VARIABLES
 
-    $ tintan config
+```sh
+  # Configure all available options.
+  # Creates JSON text file ./tintan.config if not present.
+  $ tintan config
 
-  Configure all available options.  (creates JSON text file `tintan.config` if not present)
+  # Display options and settings.
+  $ tintan config:display
 
-    $ tintan config:display
+  # Set option/value pairs.
+  $ tintan config:set option=value [option=value...]
 
-  Display options and settings.
-
-    $ tintan config:set option=value [option=value...]
-
-  Set option/value pairs.
-
-    $ tintan config:set option=default
-
-  Reset option to default value.
+  # Reset option to default value.
+  $ tintan config:set option=default
+```
 
   Normally Tintan will try to guess your current environment setup, you can
   however force a particular setting by setting or exporting one of the following variables:
 
-#### Options
+#### OPTIONS
 
-  * **verbose** / **VERBOSE** *boolean*
+##### **option** / **ENV_VAR** &bull; *type* &bull; `default value`
 
-  Verbose compiling?
+**verbose** &bull; *boolean* &bull; `true`
 
-  default: `true`
+Verbose compiling?
 
-  * **debug** / **DEBUG** *boolean*
+**debug** &bull; *boolean* &bull; `false`
 
-  Wait for debugger to attach?
+Wait for debugger to attach?
 
-  default: `false`
+**debug\_address** &bull; *String* &bull; `'127.0.0.1'`
 
-  * **debug\_address** / **DEBUG\_ADDRESS** *String*
+IP Address for debugger connection
 
-  IP Address for debugger connection
+**debug\_port** &bull; *Number* &bull; `5858`
 
-  default: `'127.0.0.1'`
+Port for debugger
 
-  * **debug\_port** / **DEBUG\_PORT** *Number*
+**iced** &bull; *boolean* &bull; `false`
 
-  Port for debugger
+Compile with Iced CoffeeScript?
 
-  default: `5858`
+**android\_avd** / **AVD** &bull; *String* &bull; `null`
 
-  * **iced** / **ICED** *boolean*
+The Android virtual device to use for development.
 
-  Compile with Iced CoffeeScript?
+**android\_device** &bull; *String* &bull; `''`
 
-  default: `false`
+The Android physical device to use for development.
 
-  * **android\_avd** / **AVD** *String*
+**android\_sdk** / **ANDROID\_SDK** &bull; *String* &bull; Linux: `/opt/android-sdk`, Mac: the max value of `/usr/local/Cellar/android-sdk/*`, Windows: `C:\Program Files (x86)\Android\android-sdk`
 
-  The Android virtual device to use for development.
+The location of the Android development kit.
 
-  default: `null`
+**ios\_version** / **IOS\_VERSION** &bull; *String* &bull; max value of `~/Library/Application Support/iPhone Simulator/`
 
-  * **android\_device** / **ANDROID\_DEVICE** *String*
+The version of iOS to target, eg. 5.0, 6.0
 
-  The Android physical device to use for development.
+**ti\_home** / **TI\_HOME** &bull; *String* &bull; Linux: `~/.titanium`, Mac: `/Library/Application Support/Titanium`
 
-  default: `''`
+The Titanium directory containing `mobilesdk/` subdir.
 
-  * **android\_sdk** / **ANDROID\_SDK** *String*
+**ti\_platform** / **TI\_PLATFORM** &bull; *String* &bull; Linux: `'android'`, Mac: `'iphone'`
 
-  The location of the Android development kit.
+The platform for mobile development: `'android'`, `'iphone'`, `'mobileweb'`, `'module'`
 
-  default: Linux: `/opt/android-sdk`, Mac: the max value of `/usr/local/Cellar/android-sdk/*`, Windows: `C:\Program Files (x86)\Android\android-sdk`
+**ti\_python** / **TI\_PYTHON** &bull; *String* &bull; the python found in `$PATH`
 
-  * **ios\_version** / **IOS\_VERSION** *String*
+The python executable to run Titanium scripts.
 
-  The version of iOS to target, eg. 5.0, 6.0
+**ti\_sdk** / **TI\_SDK** &bull; *String* &bull; `<sdk-version />` in `tiapp.xml`, or the greatest version installed on `$TI_HOME/mobilesdk`
 
-  default: max value of `~/Library/Application Support/iPhone Simulator/`
-
-  * **ti\_home** / **TI\_HOME** *String*
-
-  The Titanium directory containing mobilesdk/ subdir.
-
-  default: Linux: `~/.titanium`, Mac: `/Library/Application Support/Titanium`
-
-  * **ti\_platform** / **TI\_PLATFORM** *String*
-
-  The platform for mobile development: `'android'`, `'iphone'`, `'mobileweb'`, `'module'`
-
-  default: Linux: `'android'`, Mac: `'iphone'`
-
-  * **ti\_python** / **TI\_PYTHON** *String*
-
-  The python executable to run Titanium scripts.
-
-  default: the python found in `$PATH`
-
-  * **ti\_sdk** / **TI\_SDK** *String*
-
-  The version of the Titanium SDK to use.
-
-  default: `<sdk-version />` in `tiapp.xml`, or the greatest version installed on `$TI_HOME/mobilesdk`
+The version of the Titanium SDK to use.
