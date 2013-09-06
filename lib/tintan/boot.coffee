@@ -35,7 +35,7 @@ class Boot
 
   ready: ->
     files = ['package.json', 'Jakefile.coffee', 'plugins/tintan/plugin.py']
-    return false for v in files when jake.Task['boot:'+_(v)].shouldRunAction()
+    return false for v in files when jake.Task['boot:'+_(v)].isNeeded()
     true
 
   constructor: (Ti)->
