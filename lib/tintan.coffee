@@ -107,7 +107,7 @@ class Config
     android_device: ''
     android_devices: []
 
-  file: -> $.E('tintan.config')
+  file: -> $._('tintan.config')
 
   load: ->
     @options = {}
