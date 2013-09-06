@@ -7,7 +7,7 @@
 ###  OVERVIEW
 
   Tintan integrates state of the art tools into your Titanium development.
-  
+
   Featuring a ready to use setup for building projects with useful Jake tasks,
   being able to write applications in CofeeScript without having to worry about compiling them,
   managing your project dependencies using NPM and allowing to include node modules on your
@@ -21,7 +21,7 @@
   * CLI (tasks) for when you feel more confortable building from the command line.
   * Allows you to write CoffeeScript sources and get them automatically compiled.
   * Integrate BDD to your development and ensure all tests succeed on production builds.
-  * Include vendor node modules for using within your app by using ender.js 
+  * Include vendor node modules for using within your app by using ender.js
 
 ### INSTALLATION
 
@@ -36,7 +36,7 @@
   $ tintan -T
 ```
 
-  
+
 ### ENVIRONMENT VARIABLES
 
   Normally Tintan will try to guess your current environment setup, you can
@@ -63,7 +63,7 @@
 
                     By default the python found in PATH
 
-    IOS_VERSION   - The version of iOS to target, eg. 4.0, 5.0 
+    IOS_VERSION   - The version of iOS to target, eg. 4.0, 5.0
 
                     Default: max value of ~/Library/Application Support/iPhone Simulator/
 

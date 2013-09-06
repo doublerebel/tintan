@@ -200,7 +200,7 @@ class Config
 class AppXML
 
   file: -> $._('tiapp.xml')
-  
+
   exist: -> fs.existsSync @file()
 
   constructor: ->

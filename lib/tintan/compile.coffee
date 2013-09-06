@@ -26,7 +26,7 @@ class Coffee
   init: (tintan, @options = {})->
     @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
     options = @options
-    
+
     from = Tintan.$._(options.src)
     target = Tintan.$._(options.target)
     map = @map = compilerMap from, /\.coffee$/, (f)-> path.join(target, f).replace(/\.coffee$/, '.js')
