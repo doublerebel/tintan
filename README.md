@@ -126,4 +126,4 @@
 
   The version of the Titanium SDK to use.
 
-  default: the greatest version installed on `$TI_HOME/mobilesdk`
+  default: `<sdk-version />` in `tiapp.xml`, or the greatest version installed on `$TI_HOME/mobilesdk`

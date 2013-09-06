@@ -82,8 +82,8 @@ class $
     process.env.TI_PLATFORM or Tintan.config().get 'ti_platform' or {osx: 'iphone'}[@os] or 'android'
 
   @sdk: @mem ->
-    dir = process.env.TI_SDK or Tintan.config().get 'ti_sdk'
-    if dir and fs.existsSync dir
+    dir = process.env.TI_SDK or Tintan.config().get('ti_sdk') or Tintan.appXML().sdk()
+    if dir and fs.existsSync path.join(@home(), 'mobilesdk', @os, dir)
       dir
     else
       fs.readdirSync(path.join(@home(), 'mobilesdk', @os)).sort()[-1..][0]
@@ -232,6 +232,8 @@ class AppXML
   guid: -> @doc.get('./guid').text()
 
   name: -> @doc.get('./name').text()
+
+  sdk: -> @doc.get('./sdk-version').text()
 
   version: ->
     v = @doc.get('./version').text().split '.'
