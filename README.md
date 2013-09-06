@@ -37,13 +37,45 @@
 ```
 
 
+### SOME TASKS
+
+```sh
+  # Compile sources
+  $ tintan compile
+
+  # Watch and compile [Iced] CoffeeScript sources
+  $ tintan compile:coffee:watch
+
+  # Build and launch on Android Virtual Device
+  $ tintan run:android
+
+  # Build and launch on Android physical device
+  $ tintan install:android
+
+  # Build and launch on iPad simulator
+  $ tintan run:ipad
+
+  etc...
+```
+
+
 ### CONFIG / ENVIRONMENT VARIABLES
 
-  `tintan config` - Configure all available options
+    $ tintan config
 
-  (creates JSON text file `tintan.config` if not present)
+  Configure all available options.  (creates JSON text file `tintan.config` if not present)
 
-  `tintan config:display` - Display options and settings
+    $ tintan config:display
+
+  Display options and settings.
+
+    $ tintan config:set option=value [option=value...]
+
+  Set option/value pairs.
+
+    $ tintan config:set option=default
+
+  Reset option to default value.
 
   Normally Tintan will try to guess your current environment setup, you can
   however force a particular setting by setting or exporting one of the following variables:
