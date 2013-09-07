@@ -119,6 +119,9 @@ class Config
     android_avd: null
     android_device: ''
     android_sdk: null
+    keystore: null
+    storepass: null
+    key_alias: null
     ios_version: null
     ti_home: null
     ti_platform: null
