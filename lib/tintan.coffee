@@ -103,7 +103,14 @@ class $
       if args?.length then args.push cb else args = cb
       cb = ->
     tool = path.join.apply(path, [@home(), 'mobilesdk', @os, @sdk()].concat(ary))
-    p = spawn @py(), [tool].concat(args)
+
+    opts = {}
+    tf = (-> return true if /testflight/.test name for name in jake.program.taskNames)()
+    if Tintan.config().get('compile_js') is false
+      opts.env = 'SKIP_JS_MINIFY': true
+      opts.env[k] = v for k, v of process.env
+
+    p = spawn @py(), [tool].concat(args), opts
     p.stdout.on 'data', (data)-> process.stdout.write data
     p.stderr.on 'data', (data)-> process.stderr.write data
     p.on 'exit', cb
@@ -112,10 +119,11 @@ class Config
 
   DEFAULT_OPTIONS =
     verbose: true
+    iced: false
+    compile_js: true
     debug: false
     debug_address: '127.0.0.1'
     debug_port: 5858
-    iced: false
     android_avd: null
     android_device: ''
     android_sdk: null
