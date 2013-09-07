@@ -87,6 +87,14 @@
 
 Verbose compiling?
 
+**iced** &bull; *boolean* &bull; `false`
+
+Compile with Iced CoffeeScript?
+
+**compile_js** &bull; *boolean* &bull; `true`
+
+For distribution builds, compile JS with Closure compiler? (Obfuscation can be bad for debugging.)
+
 **debug** &bull; *boolean* &bull; `false`
 
 Wait for debugger to attach?
@@ -99,10 +107,6 @@ IP Address for debugger connection
 
 Port for debugger
 
-**iced** &bull; *boolean* &bull; `false`
-
-Compile with Iced CoffeeScript?
-
 **android\_avd** / **AVD** &bull; *String* &bull; `null`
 
 The Android virtual device to use for development.
@@ -114,6 +118,18 @@ The Android physical device to use for development.
 **android\_sdk** / **ANDROID\_SDK** &bull; *String* &bull; Linux: `/opt/android-sdk`, Mac: the max value of `/usr/local/Cellar/android-sdk/*`, Windows: `C:\Program Files (x86)\Android\android-sdk`
 
 The location of the Android development kit.
+
+**keystore** &bull; *String* &bull; `null`
+
+The location of the Android keystore with which to sign distribution builds.
+
+**storepass** &bull; *String* &bull; `null`
+
+The storepass for the Android keystore with which to sign distribution builds.
+
+**key_alias** &bull; *String* &bull; `null`
+
+The alias for the Android keystore with which to sign distribution builds.
 
 **ios\_version** / **IOS\_VERSION** &bull; *String* &bull; max value of `~/Library/Application Support/iPhone Simulator/`
 
