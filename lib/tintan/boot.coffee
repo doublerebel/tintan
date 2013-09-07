@@ -55,13 +55,15 @@ class Boot
 
       desc 'Register plugin on tiapp.xml'
       task 'plugin.xml', ->
-        unless appXML.plugin()
+        plugin = appXML.plugin()
+        pluginVersion = plugin?.attr('version')?.value()
+        unless pluginVersion is Tintan.version
           info 'register'.green + ' tintan plugin on tiapp.xml'
           xml = appXML.doc
           plugins = xml.get './plugins'
           unless plugins
             plugins = xml.root().node 'plugins', ''
-          plugin = plugins.node 'plugin', 'tintan'
+          plugin ?= plugins.node 'plugin', 'tintan'
           plugin.attr version: Tintan.version
           xml.encoding 'utf-8'
           fs.writeFileSync appXML.file(), xml.toString(), 'utf-8'
