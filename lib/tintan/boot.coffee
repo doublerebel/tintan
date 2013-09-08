@@ -91,4 +91,8 @@ class Boot
         info 'Tintan initialized'.bold.italic
         info 'Take a look at your Jakefile.coffee'
 
+    desc 'Upgrade node modules and Tintan plugin'
+    task 'upgrade', ['boot:npm','boot:plugin.py','boot:plugin.xml'], ->
+      info 'upgrade complete'.green
+
 module.exports = (Tintan)-> new Boot Tintan
