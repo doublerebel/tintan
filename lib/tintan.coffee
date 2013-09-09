@@ -139,12 +139,10 @@ class Config
   file: -> $._('tintan.config')
 
   load: ->
-    @options = {}
-    if !fs.existsSync(@file())
-      @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
-      @save()
-    else
-      @options = JSON.parse(fs.readFileSync(@file(), 'utf-8'))
+    @options = {} if !fs.existsSync(@file())
+    @options ?= JSON.parse(fs.readFileSync(@file(), 'utf-8'))
+    @options[k] = v for k,v of DEFAULT_OPTIONS when !@options.hasOwnProperty(k)
+    @save()
 
   save: ->
     if @options
