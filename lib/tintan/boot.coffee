@@ -23,11 +23,11 @@ T = (pth) ->
 T.deps = []
 
 npm_install = ->
-   info 'updating'.green + ' node modules'
-   npm = require('child_process').spawn 'npm', ['install', '-l']
-   npm.stdout.on 'data', (data)-> process.stdout.write(data)
-   npm.stderr.on 'data', (data)-> process.stderr.write(data)
-   npm.on 'exit', (code)=>
+  info 'updating'.green + ' node modules'
+  npm = require('child_process').spawn 'npm', ['install', '-l']
+  npm.stdout.on 'data', (data)-> process.stdout.write(data)
+  npm.stderr.on 'data', (data)-> process.stderr.write(data)
+  npm.on 'exit', (code)=>
     fail('npm install -l: failed with code '+code) if code != 0
     complete()
 
