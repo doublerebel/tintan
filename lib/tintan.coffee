@@ -135,6 +135,7 @@ class Config
     ti_platform: null
     ti_python: null
     ti_sdk: null
+    sublime_project: null
 
   file: -> $._('tintan.config')
 

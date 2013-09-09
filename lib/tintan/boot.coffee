@@ -3,6 +3,7 @@ path = require 'path'
 fs   = require 'fs'
 eco  = require 'eco'
 info = console.info
+xtnd = require 'deep-extend'
 
 {Tintan, $, _, E, appXML} = {}
 
@@ -30,6 +31,13 @@ npm_install = ->
   npm.on 'exit', (code)=>
     fail('npm install -l: failed with code '+code) if code != 0
     complete()
+
+sublimeProject = (Tintan) ->
+  cwd = process.cwd()
+  config = Tintan.config()
+  file = config.get 'sublime_project'
+  file or= (f for f in fs.readdirSync(cwd) when /\.sublime-project$/.test f).sort()[0]
+  file or= (cwd = cwd.split('/'))[cwd.length - 1]
 
 class Boot
 
@@ -81,6 +89,19 @@ class Boot
       desc 'Create a default config file'
       task 'tintan.config': _ 'tintan.config'
       T.deps.push 'tintan.config'
+
+      filename = sublimeProject Tintan
+      desc "Add Tintan build system to #{filename}"
+      task "sublime", ->
+        tmpl = fs.readFileSync (E 'sublime-project.json.eco'), 'utf-8'
+        value = eco.render tmpl, Tintan: Tintan
+        if fs.existsSync filename
+          value = JSON.parse value
+          existing = JSON.parse(fs.readFileSync(filename, 'utf-8'))
+          existing.build_systems = xtnd (existing.build_systems or {}), value.build_systems
+          value = JSON.stringify(existing, undefined, 2)
+        fs.writeFileSync filename, value, 'utf-8'
+        Tintan.config().set sublime_project: filename
 
       desc 'Install node modules with npm'
       task 'npm', [_('package.json')], npm_install, async: true
