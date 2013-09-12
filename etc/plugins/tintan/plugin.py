@@ -27,13 +27,21 @@ def compile(config):
     project_dir = c.get('project_dir')
 
     tintan = os.path.join(project_dir, 'node_modules/tintan/bin/tintan')
+    if not os.path.isfile(tintan):
+        node_path = os.environ['NODE_PATH'].split(':')
+        for path in node_path:
+            temp = os.path.join(path, 'tintan/bin/tintan')
+            if os.path.isfile(temp):
+                tintan = temp
+                break
 
     print "[INFO] Executing Tintan"
     print "       node", tintan, "-C", project_dir, 'tintan'
 
     proc = subprocess.Popen(['node', tintan, '-C', project_dir, 'tintan'],
                             env={'TINTAN': to_json(c),
-                                 'PATH': os.environ['PATH'] + ':/usr/local/bin'},
+                                 'PATH': os.environ['PATH'] + ':/usr/local/bin',
+                                 'NODE_PATH': os.environ['NODE_PATH']},
                             stderr = sys.stderr, stdout = sys.stdout)
     proc.communicate();
     ret = proc.wait()
